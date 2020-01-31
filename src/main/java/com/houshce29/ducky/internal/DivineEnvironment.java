@@ -23,8 +23,7 @@ import java.util.Set;
  * environments in His image.
  */
 public class DivineEnvironment extends AbstractEnvironment {
-    private static final DivineEnvironment INSTANCE
-            = new DivineEnvironment();
+    private static final DivineEnvironment INSTANCE;
 
     private static final Logger LOGGER = LoggerFactory.get(DivineEnvironment.class);
 
@@ -51,6 +50,8 @@ public class DivineEnvironment extends AbstractEnvironment {
         OBJECTS.addAll(TASKS);
         OBJECTS.add(TASK_QUEUE);
         OBJECTS.add(BUILDER);
+
+        INSTANCE = new DivineEnvironment();
     }
 
     private DivineEnvironment() {
