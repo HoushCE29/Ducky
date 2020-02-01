@@ -73,6 +73,13 @@ public class DivineEnvironment extends AbstractEnvironment {
     }
 
     /**
+     * @return Immutable list of intrinsic tasks.
+     */
+    public List<Task> getIntrinsicTasks() {
+        return TASKS;
+    }
+
+    /**
      * @return Single God instance.
      */
     public static DivineEnvironment getInstance() {

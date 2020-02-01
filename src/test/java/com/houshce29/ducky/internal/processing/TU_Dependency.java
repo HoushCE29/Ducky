@@ -1,5 +1,6 @@
 package com.houshce29.ducky.internal.processing;
 
+import com.houshce29.ducky.testing.BaseUnitTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +10,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @SuppressWarnings("unchecked")
-public class TU_Dependency {
+public class TU_Dependency extends BaseUnitTest {
     private static final Object ARG = "VALUE";
     private static final Class<TestObject> CLAZZ = TestObject.class;
     private static final Constructor<TestObject> CONSTRUCTOR =

@@ -1,6 +1,7 @@
 package com.houshce29.ducky.internal.processing;
 
 import com.google.common.collect.Sets;
+import com.houshce29.ducky.testing.BaseUnitTest;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @SuppressWarnings("unchecked")
-public class TU_ProcessingPlatform {
+public class TU_ProcessingPlatform extends BaseUnitTest {
 
     @Test
     public void testCreate() {

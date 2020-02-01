@@ -1,5 +1,6 @@
 package com.houshce29.ducky.internal.processing;
 
+import com.houshce29.ducky.testing.BaseUnitTest;
 import com.houshce29.ducky.exceptions.ReservedTypeException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -7,7 +8,7 @@ import org.junit.Test;
 import java.lang.reflect.Constructor;
 import java.util.Set;
 
-public class TU_MotherPlucker {
+public class TU_MotherPlucker extends BaseUnitTest {
     private static final Constructor<?> CONSTRUCTOR = Foo.class.getConstructors()[0];
 
     @Test

@@ -2,6 +2,7 @@ package com.houshce29.ducky.internal.tasking;
 
 import com.houshce29.ducky.framework.core.ModifiableEnvironment;
 import com.houshce29.ducky.internal.processing.ProcessingPlatform;
+import com.houshce29.ducky.testing.BaseUnitTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +10,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Map;
 
-public class TU_TaskQueue {
+public class TU_TaskQueue extends BaseUnitTest {
     private TaskQueue queue;
 
     @Before

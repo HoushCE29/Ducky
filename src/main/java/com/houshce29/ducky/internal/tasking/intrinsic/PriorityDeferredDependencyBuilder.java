@@ -37,14 +37,7 @@ public final class PriorityDeferredDependencyBuilder extends IntrinsicBuildTask 
             LOGGER.debug("Built [%d] objects this iteration.", iterationBuilds);
 
             // Remove the dependencies that have been built.
-
-            platform.mutableDeferredDependencySet().stream()
-                    .filter(Dependency::wasSuccessfullyBuilt)
-                    .map(Dependency::getType)
-                    .forEach(platform.mutablePriorityBuildSet()::remove);
-
-            platform.mutableDeferredDependencySet()
-                    .removeIf(Dependency::wasSuccessfullyBuilt);
+            flushBuiltDependenciesAndPriority(platform, false);
         }
     }
 }

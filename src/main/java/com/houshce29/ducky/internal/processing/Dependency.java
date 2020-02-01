@@ -81,4 +81,9 @@ public final class Dependency<T> {
         }
         return ((Dependency) obj).getType().equals(type);
     }
+
+    @Override
+    public String toString() {
+        return type.toString();
+    }
 }

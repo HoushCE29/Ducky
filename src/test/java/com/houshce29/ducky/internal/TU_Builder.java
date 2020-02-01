@@ -1,12 +1,13 @@
 package com.houshce29.ducky.internal;
 
 import com.houshce29.ducky.internal.tasking.TaskQueue;
+import com.houshce29.ducky.testing.BaseUnitTest;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.HashSet;
 
-public class TU_Builder {
+public class TU_Builder extends BaseUnitTest {
 
     @Test
     public void testBuildCallsTaskQueue() {
