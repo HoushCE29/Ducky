@@ -31,7 +31,7 @@ public class TestScenarioFactory {
     public static List<TestScenario> getAllScenarios() {
         return Arrays.asList(getHappyPathScenario(),
                              getMultipleInstanceInjectionScenario(),
-                             // getInjectionTooGeneralScenario(),
+                             getInjectionTooGeneralScenario(),
                              getCircularDependencyScenario(),
                              getMissingDependencyScenario());
     }
