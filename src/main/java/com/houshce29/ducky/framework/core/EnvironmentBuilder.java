@@ -1,7 +1,7 @@
 package com.houshce29.ducky.framework.core;
 
 import com.houshce29.ducky.exceptions.DefinitionScanException;
-import com.houshce29.ducky.internal.DivineEnvironment;
+import com.houshce29.ducky.internal.Builder;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -76,9 +76,7 @@ public class EnvironmentBuilder {
      * @return A new environment instance.
      */
     public Environment build() {
-        return DivineEnvironment.getInstance()
-                .getBuilder()
-                .build(included, injections);
+        return Builder.newInstance().build(injections, included);
     }
 
     private <T> T buildOrThrowException(Class<T> type) {

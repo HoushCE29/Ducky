@@ -1,35 +1,39 @@
-package com.houshce29.ducky.internal.tasking.intrinsic;
+package com.houshce29.ducky.internal;
 
-import com.houshce29.ducky.framework.core.ModifiableEnvironment;
 import com.houshce29.ducky.exceptions.PublicConstructorsException;
-import com.houshce29.ducky.internal.processing.Dependency;
-import com.houshce29.ducky.internal.processing.ProcessingPlatform;
-import com.houshce29.ducky.internal.tasking.PreBuildTask;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Task for creating dependency metadata.
+ * Service that creates dependencies.
  */
 @SuppressWarnings("unchecked")
-public final class PreBuildDependencyCreator extends PreBuildTask {
-    public static final String ID = "RESERVED$ducky.intrinsic.PreBuildDependencyCreator";
+class DependencyCreator {
 
-    public PreBuildDependencyCreator() {
-        super(ID);
-    }
-
-    @Override
-    public void run(ProcessingPlatform platform, ModifiableEnvironment environment) {
-        platform.buildSet().stream()
+    /**
+     * Creates a dependency set from the given build set.
+     * @param buildSet Set of types to be built.
+     * @return Set of dependencies.
+     */
+    Set<Dependency<?>> create(Set<Class<?>> buildSet) {
+        return buildSet.stream()
                 .map(type -> new Dependency(type, getRequirements(type)))
-                .forEach(platform.mutableDependencySet()::add);
+                // derp
+                .map(dep -> (Dependency<?>) dep)
+                .collect(Collectors.toSet());
     }
 
+    /**
+     * Gets the requirements for building the given type.
+     * @param type Type to build.
+     * @param <T> Type to build.
+     * @return Constructor, bearing the object requirements.
+     */
     private <T> Constructor<T> getRequirements(Class<T> type) {
         // Determine how many public constructors there are.
         List<Constructor<T>> constructors = Arrays.stream(type.getConstructors())
