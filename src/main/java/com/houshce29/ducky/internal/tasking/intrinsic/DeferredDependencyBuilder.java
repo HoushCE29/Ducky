@@ -39,9 +39,7 @@ public final class DeferredDependencyBuilder extends IntrinsicBuildTask {
             LOGGER.debug("Built [%d] objects this iteration.", iterationBuilds);
 
             // Remove the dependencies that have been built.
-
-            platform.mutableDeferredDependencySet()
-                    .removeIf(Dependency::wasSuccessfullyBuilt);
+            flushBuiltDependencies(platform.mutableDeferredDependencySet());
         }
     }
 }

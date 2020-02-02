@@ -8,6 +8,7 @@ import com.houshce29.ducky.internal.tasking.PreBuildTask;
 import com.houshce29.ducky.meta.logging.Logger;
 import com.houshce29.ducky.meta.logging.LoggerFactory;
 
+import java.lang.reflect.Modifier;
 import java.util.Set;
 
 /**
@@ -55,6 +56,15 @@ public final class PreBuildDependencyDeferrer extends PreBuildTask {
                 Class<?> setType = MotherPlucker.pluckSetType(dependency.getConstructor(), param);
                 LOGGER.debug("Pushing [%s] into the priority build set.", setType);
                 platform.mutablePriorityBuildSet().add(setType);
+            }
+            // Otherwise check if generic. We won't be necessarily accurate if we accidentally build
+            // one generic thing first...
+            // TODO do the same for the case where a non-abstract class is inherited...
+            else if (requirement.isInterface() || Modifier.isAbstract(requirement.getModifiers())) {
+                LOGGER.debug("Deferring build of generic [%s] if not already deferred...");
+                defer = true;
+                LOGGER.debug("Pushing [%s] into the priority build set.", requirement);
+                platform.mutablePriorityBuildSet().add(requirement);
             }
             ++param;
         }

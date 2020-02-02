@@ -38,13 +38,7 @@ public final class StandardDependencyBuilder extends IntrinsicBuildTask {
             LOGGER.debug("Built [%d] objects this iteration.", iterationBuilds);
 
             // Remove the dependencies that have been built.
-
-            platform.mutableDependencySet().stream()
-                    .filter(Dependency::wasSuccessfullyBuilt)
-                    .map(Dependency::getType)
-                    .forEach(platform.mutablePriorityBuildSet()::remove);
-
-            platform.mutableDependencySet().removeIf(Dependency::wasSuccessfullyBuilt);
+            flushBuiltDependenciesAndPriority(platform, true);
         }
     }
 }

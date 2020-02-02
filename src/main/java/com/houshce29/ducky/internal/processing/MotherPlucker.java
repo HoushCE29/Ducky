@@ -23,7 +23,7 @@ public final class MotherPlucker {
         try {
             // Get the Set out of the constructor.
             ParameterizedType set = (ParameterizedType) constructor
-                    .getGenericExceptionTypes()[parameter];
+                    .getGenericParameterTypes()[parameter];
 
             // Set should only have exactly one type arg in this framework.
             return (Class<?>) set.getActualTypeArguments()[0];

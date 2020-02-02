@@ -23,7 +23,7 @@ public class TaskQueue {
      */
     public void schedulePreBuildTask(PreBuildTask task) {
         preBuildTaskQueue.add(task);
-        LOGGER.info("Scheduled pre-build task [%s].", task.getId());
+        LOGGER.info("Scheduled PRE_BUILD task [%s].", task.getId());
     }
 
     /**
@@ -32,7 +32,7 @@ public class TaskQueue {
      */
     public void scheduleBuildTask(BuildTask task) {
         buildTaskQueue.add(task);
-        LOGGER.info("Scheduled build task [%s].", task.getId());
+        LOGGER.info("Scheduled BUILD task [%s].", task.getId());
     }
 
     /**
@@ -41,7 +41,7 @@ public class TaskQueue {
      */
     public void schedulePostBuildTask(PostBuildTask task) {
         postBuildTaskQueue.add(task);
-        LOGGER.info("Scheduled post-build task [%s].", task.getId());
+        LOGGER.info("Scheduled POST_BUILD task [%s].", task.getId());
     }
 
     /**
@@ -85,9 +85,9 @@ public class TaskQueue {
                               ModifiableEnvironment environment) {
 
         for (Task task : tasks) {
-            LOGGER.info("Executing %s task [%s]...", task.getWhen(), task.getId());
+            LOGGER.info("** Executing %s task [%s]... **", task.getWhen(), task.getId());
             task.run(platform, environment);
-            LOGGER.info("...Task [%s] complete.", task.getId());
+            LOGGER.info("** ...Task [%s] complete. **", task.getId());
         }
     }
 }
