@@ -1,6 +1,8 @@
 package com.houshce29.ducky.internal;
 
 import com.houshce29.ducky.exceptions.PublicConstructorsException;
+import com.houshce29.ducky.meta.logging.Logger;
+import com.houshce29.ducky.meta.logging.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("unchecked")
 class DependencyCreator {
+    private static final Logger LOGGER = LoggerFactory.get(DependencyCreator.class);
 
     /**
      * Creates a dependency set from the given build set.
@@ -25,6 +28,7 @@ class DependencyCreator {
                 .map(type -> new Dependency(type, getRequirements(type)))
                 // derp
                 .map(dep -> (Dependency<?>) dep)
+                .peek(dep -> LOGGER.info("* Created dependency [%s].", dep))
                 .collect(Collectors.toSet());
     }
 
@@ -44,6 +48,7 @@ class DependencyCreator {
 
         // If this is the case, we have no idea how to proceed.
         if (constructors.size() != 1) {
+            LOGGER.error("Cannot proceed with the incorrect number of public constructors.");
             throw new PublicConstructorsException(type, constructors.size());
         }
 

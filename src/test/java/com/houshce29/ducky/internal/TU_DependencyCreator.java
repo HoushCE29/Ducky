@@ -1,6 +1,7 @@
 package com.houshce29.ducky.internal;
 
 import com.houshce29.ducky.exceptions.PublicConstructorsException;
+import com.houshce29.ducky.testing.BaseUnitTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class TU_DependencyCreator {
+public class TU_DependencyCreator extends BaseUnitTest {
 
     private DependencyCreator creator;
 

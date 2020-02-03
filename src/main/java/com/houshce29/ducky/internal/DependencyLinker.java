@@ -4,6 +4,8 @@ import com.houshce29.ducky.exceptions.CircularDependencyException;
 import com.houshce29.ducky.exceptions.MultipleQualifyingObjectsFoundException;
 import com.houshce29.ducky.exceptions.QualifiedObjectsNotFoundException;
 import com.houshce29.ducky.internal.processing.MotherPlucker;
+import com.houshce29.ducky.meta.logging.Logger;
+import com.houshce29.ducky.meta.logging.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
  * used to schedule and determine when a dependency can be built.
  */
 class DependencyLinker {
+    private static final Logger LOGGER = LoggerFactory.get(DependencyLinker.class);
 
     /**
      * Performs the linking for all dependencies.
@@ -23,6 +26,7 @@ class DependencyLinker {
      */
     void link(Set<Dependency<?>> dependencies, Set<Object> objects) {
         for (Dependency<?> dependency : dependencies) {
+            LOGGER.info("** Linking [%s] for build.", dependency);
             link(dependency, new HashSet<>(), dependencies, objects);
         }
     }
@@ -40,12 +44,15 @@ class DependencyLinker {
                       Set<Object> objects) {
 
         if (trail.contains(linker)) {
+            LOGGER.error("CIRCULAR DEPENDENCY FOUND!");
             throw new CircularDependencyException(linker, trail);
         }
         if (!linker.getRequirements().isEmpty()) {
             trail.add(linker);
+            LOGGER.debug("Trail: %s", trail);
             for (Dependency<?> child : getChildren(linker, dependencies, objects)) {
                 linker.link(child);
+                LOGGER.debug("Linked [%s] to [%s]", linker, child);
                 link(child, trail, dependencies, objects);
             }
             trail.remove(linker);
@@ -54,6 +61,8 @@ class DependencyLinker {
 
     /**
      * Returns all the child dependencies for a given dependency.
+     * Note that dependencies partially satisfied by an object
+     * will NOT return the object in the form of another dependency.
      * @param dep Dependency to pull children from.
      * @param dependencies Full set of dependencies.
      * @param objects Full set of pre-built objects.
@@ -83,10 +92,12 @@ class DependencyLinker {
                 int found = (children.size() - depsFound) + objectCount;
                 // No deps / objects found
                 if (found == 0) {
+                    LOGGER.error("Cannot find target object/dependency.");
                     throw new QualifiedObjectsNotFoundException(type);
                 }
                 // Too many objects or deps found
                 if (found > 1) {
+                    LOGGER.error("Multiple objects/dependencies found.");
                     throw new MultipleQualifyingObjectsFoundException(type);
                 }
             }

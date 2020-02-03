@@ -3,6 +3,8 @@ package com.houshce29.ducky.internal;
 import com.houshce29.ducky.exceptions.DependencyBuildException;
 import com.houshce29.ducky.exceptions.QualifiedObjectsNotFoundException;
 import com.houshce29.ducky.internal.processing.MotherPlucker;
+import com.houshce29.ducky.meta.logging.Logger;
+import com.houshce29.ducky.meta.logging.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
  * Service that builds dependencies into objects.
  */
 class DependencyBuilder {
+    private static final Logger LOGGER = LoggerFactory.get(DependencyBuilder.class);
 
     /**
      * Builds dependencies into objects.
@@ -29,13 +32,18 @@ class DependencyBuilder {
         while(!remaining.isEmpty()) {
             long iterationBuilds = remaining.stream()
                     .filter(Dependency::canBuild)
-                    .filter(dep -> build(dep, objects))
+                    .filter(dep -> build(dep, build))
                     .count();
 
+            // There should always be at least one build in a given iteration
             if (iterationBuilds == 0L) {
+                LOGGER.error("FATAL: FAILED TO BUILD DEPENDENCIES.");
                 throw new DependencyBuildException(remaining);
             }
 
+            LOGGER.info("SUCCESS: Built %d dependencies in batch.", iterationBuilds);
+
+            // Be sure to reduce set, otherwise we'll be looping forever!
             remaining.removeIf(Dependency::isSuccessfullyBuilt);
         }
 
@@ -52,6 +60,7 @@ class DependencyBuilder {
         List<Object> args = getRequiredObjects(dep, objects);
         Optional<Object> build = dep.build(args);
         if (!build.isPresent()) {
+            LOGGER.warn("Unknown error happened during build.");
             return false;
         }
         objects.add(build.get());

@@ -64,6 +64,28 @@ public class TU_Dependency extends BaseUnitTest {
         Assert.assertEquals(ARG, object.getValue());
     }
 
+    @Test
+    public void testCanBuild() {
+        Dependency<A> other = new Dependency<>(A.class,
+                (Constructor<A>) A.class.getConstructors()[0]);
+
+        dependency.link(other);
+
+        // Has a linked dep that isn't built yet
+        Assert.assertFalse(dependency.canBuild());
+
+        // Has no linked deps, can build
+        Assert.assertTrue(other.canBuild());
+        other.build(Collections.emptyList());
+
+        Assert.assertTrue(dependency.canBuild());
+    }
+
+    private static final class A {
+        public A() {
+        }
+    }
+
     private static final class TestObject {
         private final String value;
         public TestObject(String value) {
