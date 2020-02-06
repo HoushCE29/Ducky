@@ -1,11 +1,13 @@
-package com.houshce29.ducky.internal.processing;
+package com.houshce29.ducky.internal;
 
 import com.google.common.collect.ImmutableList;
 
 import java.lang.reflect.Constructor;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Represents a dependency.
@@ -14,6 +16,7 @@ public final class Dependency<T> {
     private final Class<T> type;
     private final Constructor<T> constructor;
     private final List<Class<?>> requirements;
+    private Set<Dependency<?>> watchSet = new HashSet<>();
     private boolean built = false;
 
     public Dependency(Class<T> type, Constructor<T> constructor) {
@@ -65,8 +68,25 @@ public final class Dependency<T> {
     /**
      * @return `true` if this dependency was previously successfully built.
      */
-    public boolean wasSuccessfullyBuilt() {
+    public boolean isSuccessfullyBuilt() {
         return built;
+    }
+
+    /**
+     * Collects the dependency to watch for when this dependency can be built.
+     * @param dependency Dependency to watch to determine when to build
+     *                   this dependency.
+     */
+    public void link(Dependency<?> dependency) {
+        watchSet.add(dependency);
+    }
+
+    /**
+     * @return `true` if this dependency can be built.
+     */
+    public boolean canBuild() {
+        return watchSet.stream()
+                .allMatch(Dependency::isSuccessfullyBuilt);
     }
 
     @Override

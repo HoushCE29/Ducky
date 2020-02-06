@@ -1,4 +1,4 @@
-package com.houshce29.ducky.internal.processing;
+package com.houshce29.ducky.internal;
 
 import com.houshce29.ducky.testing.BaseUnitTest;
 import org.junit.Assert;
@@ -27,7 +27,7 @@ public class TU_Dependency extends BaseUnitTest {
     public void testSuccessfulBuild() {
         Optional<Object> build = dependency.build(Collections.singletonList(ARG));
         Assert.assertTrue(build.isPresent());
-        Assert.assertTrue(dependency.wasSuccessfullyBuilt());
+        Assert.assertTrue(dependency.isSuccessfullyBuilt());
 
         TestObject object = (TestObject) build.get();
         Assert.assertEquals(ARG, object.getValue());
@@ -37,7 +37,7 @@ public class TU_Dependency extends BaseUnitTest {
     public void testFailBuild() {
         Optional<Object> build = dependency.build(Collections.emptyList());
         Assert.assertFalse(build.isPresent());
-        Assert.assertFalse(dependency.wasSuccessfullyBuilt());
+        Assert.assertFalse(dependency.isSuccessfullyBuilt());
     }
 
     @Test
@@ -45,12 +45,12 @@ public class TU_Dependency extends BaseUnitTest {
         // Fail build
         Optional<Object> build = dependency.build(Collections.emptyList());
         Assert.assertFalse(build.isPresent());
-        Assert.assertFalse(dependency.wasSuccessfullyBuilt());
+        Assert.assertFalse(dependency.isSuccessfullyBuilt());
 
         // Pass build
         build = dependency.build(Collections.singletonList(ARG));
         Assert.assertTrue(build.isPresent());
-        Assert.assertTrue(dependency.wasSuccessfullyBuilt());
+        Assert.assertTrue(dependency.isSuccessfullyBuilt());
 
         TestObject object = (TestObject) build.get();
         Assert.assertEquals(ARG, object.getValue());
@@ -58,10 +58,32 @@ public class TU_Dependency extends BaseUnitTest {
         // Fail build
         build = dependency.build(Collections.singletonList(ARG));
         Assert.assertTrue(build.isPresent());
-        Assert.assertTrue(dependency.wasSuccessfullyBuilt());
+        Assert.assertTrue(dependency.isSuccessfullyBuilt());
 
         object = (TestObject) build.get();
         Assert.assertEquals(ARG, object.getValue());
+    }
+
+    @Test
+    public void testCanBuild() {
+        Dependency<A> other = new Dependency<>(A.class,
+                (Constructor<A>) A.class.getConstructors()[0]);
+
+        dependency.link(other);
+
+        // Has a linked dep that isn't built yet
+        Assert.assertFalse(dependency.canBuild());
+
+        // Has no linked deps, can build
+        Assert.assertTrue(other.canBuild());
+        other.build(Collections.emptyList());
+
+        Assert.assertTrue(dependency.canBuild());
+    }
+
+    private static final class A {
+        public A() {
+        }
     }
 
     private static final class TestObject {
