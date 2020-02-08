@@ -3,6 +3,7 @@ package com.houshce29.ducky.framework.core;
 import com.houshce29.ducky.exceptions.MultipleQualifyingObjectsFoundException;
 import com.houshce29.ducky.exceptions.QualifiedObjectsNotFoundException;
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,9 @@ public abstract class AbstractEnvironment implements Environment {
             throw new MultipleQualifyingObjectsFoundException(type);
         }
         return qualified.stream()
+                // Compare by simple class name first, then hash code if need be.
+                .sorted(Comparator.comparing(obj -> obj.getClass().getSimpleName())
+                        .thenComparing(Object::hashCode))
                 .findFirst()
                 // If no objects are found, an exception will have
                 // been thrown by the call to `getAll()`.
@@ -59,7 +63,12 @@ public abstract class AbstractEnvironment implements Environment {
 
     @Override
     public boolean contains(Class<?> type) {
-        return count(type) > 0;
+        for (Object obj : environment) {
+            if (type.isInstance(obj)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // INTERNAL IMPL USE
