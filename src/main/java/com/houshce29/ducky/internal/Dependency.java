@@ -1,8 +1,8 @@
 package com.houshce29.ducky.internal;
 
-import com.google.common.collect.ImmutableList;
-
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +22,8 @@ public final class Dependency<T> {
     public Dependency(Class<T> type, Constructor<T> constructor) {
         this.type = type;
         this.constructor = constructor;
-        this.requirements = ImmutableList.copyOf(this.constructor.getParameterTypes());
+        this.requirements = Collections.unmodifiableList(
+                Arrays.asList(this.constructor.getParameterTypes()));
     }
 
     /**

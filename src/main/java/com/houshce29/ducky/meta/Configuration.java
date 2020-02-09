@@ -2,7 +2,6 @@ package com.houshce29.ducky.meta;
 
 import com.houshce29.ducky.meta.logging.Level;
 import com.houshce29.ducky.meta.logging.Logger;
-import com.houshce29.ducky.meta.logging.impl.DefaultLogger;
 import com.houshce29.ducky.meta.logging.impl.NoopLogger;
 
 import java.util.function.Function;
@@ -60,7 +59,8 @@ public class Configuration {
     }
 
     public static void reset() {
-        loggerProvider = DefaultLogger::new;
-        loggingLevel = Level.INFO;
+        // loggerProvider = DefaultLogger::new;
+        disableLogger();
+        loggingLevel = Level.ERROR;
     }
 }

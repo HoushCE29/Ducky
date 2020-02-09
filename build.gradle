@@ -1,6 +1,5 @@
 plugins {
-    id 'java'
-    id 'application'
+    id 'java-library'
 }
 
 repositories {
@@ -10,9 +9,7 @@ repositories {
 dependencies {
     implementation 'com.google.guava:guava:28.0-jre'
     testImplementation 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.+"
+    testImplementation "org.mockito:mockito-core:2.+"
 }
 
-application {
-    mainClassName = 'com.houshce29.ducky.App'
-}
+apply plugin: 'idea'; apply plugin: 'eclipse'

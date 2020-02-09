@@ -39,12 +39,20 @@ public class Quack {
     }
 
     /**
+     * @return New builder.
+     */
+    public static Definer define() {
+        return new Definer();
+    }
+
+    /**
      * Internal builder.
      */
     public static class Definer {
         private EnvironmentBuilder environmentBuilder;
 
         private Definer() {
+            environmentBuilder = Environment.define();
         }
 
         /**
